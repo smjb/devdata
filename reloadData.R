@@ -1,7 +1,20 @@
+###
+# File     : reloadData.R
+# Author   : smjb
+# Context  : shiny application
+#   AppName: Simple Analytics of Japanese Population, 1970 - 2010
+#   For    : Coursera Data Scientist Specialization
+#   For    : Module 9 - Developing Data Products
+#   Date   : Sept 2015
+# Remark   : rCharts not used as it has unpredictable errors that is time consuming to 
+# Remark   : be debugged. The effort is too much for simple application like this.
+###
+
 library(dplyr)
 library(rCharts)
 library(reshape2)
 
+# initialize global variables
 rm(list=ls())
 jpstat <- tbl_df(read.csv("jpstat_data.csv")) %>% mutate(BornYear = Year - MinAge)
 preflist <- jpstat %>% select(PID, Prefecture) %>% distinct
@@ -9,6 +22,7 @@ agelist <- jpstat %>% filter(AgeGroup!="Total") %>% select(AgeGroup, MinAge, Max
 yearlist <- jpstat%>% select(Year)%>%distinct
 bornlist<-jpstat%>% select(BornYear)%>%distinct%>%arrange(BornYear)
 
+# return Population of Japan
 JapanPop <- function(minyear = 1970, maxyear=2010) {
   if(minyear<1970) minyear<-1970
   if(maxyear>2010) maxyear<-2010
@@ -17,6 +31,7 @@ JapanPop <- function(minyear = 1970, maxyear=2010) {
 
 }
 
+# extract population data based on filters provided
 SelAgePop <- function(minyear = 1970, maxyear=2010, SelAge = "Total", pref = 0) {
   if(maxyear < minyear) {
     t <- minyear
@@ -25,8 +40,7 @@ SelAgePop <- function(minyear = 1970, maxyear=2010, SelAge = "Total", pref = 0) 
   }
   if(minyear<1970) minyear<-1970
   if(maxyear>2010) maxyear<-2010
-  # message(paste("SelAgePop called with (", minyear,",",maxyear,",", SelAge,",",pref,")"))
-  
+
   if(length(SelAge)==1) {
     if(SelAge=="Total") {
       jp <- jpstat %>% filter(Year>=minyear, Year<=maxyear, 
@@ -44,6 +58,7 @@ SelAgePop <- function(minyear = 1970, maxyear=2010, SelAge = "Total", pref = 0) 
   
 }
 
+# Select prefecture population within time requested
 PrefAgePop <- function(minyear = 1970, maxyear=2010,  pref = 0) {
   if(maxyear < minyear) {
     t <- minyear
@@ -60,7 +75,7 @@ PrefAgePop <- function(minyear = 1970, maxyear=2010,  pref = 0) {
   
 }
 
-
+# unused
 calcGrowth <- function (PrefTable) {
   x <- dcast(PrefTable, AgeGroup ~ Year)  
   dx <- dim(x)
@@ -70,6 +85,7 @@ calcGrowth <- function (PrefTable) {
   }
 }
 
+# unused
 PrefAgePopGrowth <- function(minyear = 1970, maxyear=2010,  pref = 0) {
   if(maxyear < minyear) {
     t <- minyear
@@ -88,6 +104,7 @@ PrefAgePopGrowth <- function(minyear = 1970, maxyear=2010,  pref = 0) {
   
 }
 
+#return the population for the age group considered
 AgePop <- function(minyear = 1970, maxyear=2010,  SelAge = 1) {
   if(maxyear < minyear) {
     t <- minyear
@@ -100,13 +117,14 @@ AgePop <- function(minyear = 1970, maxyear=2010,  SelAge = 1) {
   age <- as.integer(SelAge)
 #   str(age)
   
-  agegrp <- paste0("a", (age-1)*5,"t", (age)*5-1)
+  agegrp <- getAgeGroupName(age)
   #message(paste("AgePop called with (", minyear,",",maxyear,",", age,",",agegrp,")"))
   jp <- jpstat %>% filter(Year>=minyear, Year<=maxyear, AgeGroup == agegrp)
   return(jp)
   
 }
 
+# list all Prefectures
 listPref <- function() {
   l <- jpstat %>% select(PID, Prefecture) %>% distinct %>% arrange(Prefecture, PID)
   v <- l$PID
@@ -115,9 +133,12 @@ listPref <- function() {
   return (z)
 }
 
+# get prefecture name from PID
 getPrefName <- function(pref = 0) {
   preflist$Prefecture[preflist$PID==pref]
 }
+
+# List Age group in human readable format
 listAgeGroup <- function() {
   l <- jpstat %>% filter(AgeGroup != "Total") %>% 
               select(AgeGroup, MinAge, MaxAge)  %>% 
@@ -132,16 +153,19 @@ listAgeGroup <- function() {
   return (z)
 }
 
+# list of all years in dataset
 listYear <- function() {
   l <- unique(jpstat$Year)
   return (l)
 }
 
+# list all Age Group in dataset
 getAgeGroupList <- function() {
   r <- agelist %>% select(AgeGroup) %>% filter(AgeGroup!="Total") %>% distinct %>% arrange(AgeGroup)
   return (r)
 }
 
+# get Age Group name from index value
 getAgeGroupName<- function (minyear) {
   # message("Hellow")
   minyear <- as.integer(minyear)
@@ -155,6 +179,7 @@ getAgeGroupName<- function (minyear) {
   return (w)
 }
 
+# Get table of time range of interest for the selected prefecture
 getBornYearStat <- function(minyear=1970, maxyear=2010, pref=0) {
   #message(paste("(",minyear,",",maxyear,",",pref,")"))
   minyear <- as.integer(minyear)
@@ -163,6 +188,7 @@ getBornYearStat <- function(minyear=1970, maxyear=2010, pref=0) {
   return(bystat)
 }
 
+#Select data for census year *yr*
 getQuantileStat <- function(yr=1970) {
   if(yr<1970) yr<-1970
   qstat <- jpstat %>% filter(AgeGroup!="Total", Year ==yr)
@@ -170,6 +196,7 @@ getQuantileStat <- function(yr=1970) {
   return(qstat)
 }
 
+# select data for selected age group
 getAgeQuantileStat <- function(q = "a00t04") {
   
   qstat <- jpstat %>% filter(AgeGroup==q)
@@ -180,8 +207,3 @@ getAgeQuantileStat <- function(q = "a00t04") {
 minyear = 1980
 maxyear = 2006
 pref=0
-
-# x <- SelAgePop(minyear=minyear, maxyear=maxyear)
-# x
-#nPlot(Population ~ Year, data=x, group='AgeGroup', type="stackedAreaChart")
-

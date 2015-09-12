@@ -7,7 +7,7 @@
 #   For    : Module 9 - Developing Data Products
 #   Date   : Sept 2015
 # Remark   : rCharts not used as it has unpredictable errors that is time consuming to 
-#          : be debugged. The effort is too much for simple application like this
+# Remark   : be debugged. The effort is too much for simple application like this.
 ###
 
 # The user-interface definition of the Shiny web app.
@@ -15,10 +15,10 @@ library(shiny)
 library(rCharts)
 library(dplyr)
 
-#source("reloadData.R")
+source("reloadData.R")
 
 # line only used during debugging. 
-options(shiny.error=browser) 
+#options(shiny.error=browser) 
 
 ## UI Layout Brief
 # UI has a Top Navigation Bar, with 4 Navigation Panel : 
@@ -26,7 +26,8 @@ options(shiny.error=browser)
 # 2. Age Tracking by Prefecture (Age Tracking)
 # 3. Age Group Statistics on Census Year (Age Group View)
 # 4. Age Group Evolution in Time (Age Group Evolution)
-# 4. Raw Data View (Table View)
+# 5. Raw Data View (Table View)
+# 6. About Page (About)
 ## --
 
 
@@ -56,7 +57,13 @@ shinyUI(
             ) #selectInput.pref
           ), #sideBarPanel.control
           mainPanel(
+            h4("Background"),
+            p(paste0("The plots below shows the total population evolution in time for each age group.",
+                     "The age group is in the format a{xx}t{yy} where it is read as the age group between {xx} and {yyy}.",
+                     "You can use the control panel on the right to examine the population of each Prefecture during the desired time range.")),
+            h4("Total population evolution in time by age group"),
             plotOutput("chart_pref"),
+            h4("Total population proportion evolution in time by age group"),
             plotOutput("chart100pct_pref")
           )#mainpanel
         )#SiteBarLayout.right
@@ -108,6 +115,7 @@ shinyUI(
             )
           ), #sideBarPanel.control
           mainPanel(
+            p("The graph below shows how the population proportion for each age group for the selected year is distributed between the different prefectures."),
             plotOutput("showAgeGroupBoxPct")
           )#mainpanel
         )#SiteBarLayout
@@ -126,6 +134,9 @@ shinyUI(
             )
           ), #sideBarPanel.control
           mainPanel(
+            p("The graph below shows how the population proportion of the selected age group changes over time."),
+            p("This will show in amuch clearer way on which age group is increasing and which are decreasing over time."),
+            p("You will see that the birth rate is decreasing while the longevity is increasing."),
             plotOutput("showAgeGroupEvolutionBoxPct")
           )#mainpanel
         )#SiteBarLayout
@@ -133,14 +144,25 @@ shinyUI(
       tabPanel( 
         "Table View", 
         mainPanel(
-          h1("Hello world"),
+          p("You can use the fieldsat the bottom of this table to filter data."),
           fluidRow(
             column(10,
                    dataTableOutput('dispStatTable')
             ) # column
           ) #fluid row
         ) #main
-      )#Tabpanel.tab5      
+      ),#Tabpanel.tab5
+      tabPanel( 
+        "About", 
+        mainPanel(
+          h2("Data source"),
+          p("Census data from 1970 to 2010 is downloaded from "),
+          a("http://www.stat.go.jp/english/data/jinsui/2.htm"),
+          h2("Preprocessing"),
+          p("The data from multiple Excel spreadsheets are extracted and processed using the  R-script reshape_jap.R and reshape_jap2.R."),
+          p("The shinyApp only use preprocessed file to speed up the operations.")
+        ) #main
+      )#Tabpanel.tab5
     ) #navPanel
   )#fluidpage
 )#shiny

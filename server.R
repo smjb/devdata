@@ -7,7 +7,7 @@
 #   For    : Module 9 - Developing Data Products
 #   Date   : Sept 2015
 # Remark   : rCharts not used as it has unpredictable errors that is time consuming to 
-#          : be debugged. The effort is too much for simple application like this.
+# Remark   : be debugged. The effort is too much for simple application like this.
 ###
 
 library(shiny)
@@ -117,7 +117,6 @@ shinyServer(function(input, output) {
   # [      ] Plot Population Proportion Distribution for each age group for selected Census Year
   #          on Navigation Panel (Age Group Evolution)
   output$showAgeGroupEvolutionBoxPct <- renderPlot({
-    #message(paste("ag=",input$ag))
     yr = getAgeGroupName(input$ag)
     qstat <- getAgeQuantileStat(yr)
     g <- ggplot(qstat, aes(as.factor(Year), PopPct))+geom_boxplot()+xlab("Year")+
@@ -133,7 +132,7 @@ shinyServer(function(input, output) {
   output$dispStatTable <- renderDataTable(jpstat)
   
   # [unused] Plot Population Distribution over time for selected Age Group
-  #          on Navigation Panel (Age Group Evolution in Time)
+  #          on Navigation Panel (--unused--)
   output$showAgeGroupEvolutionBox <- renderPlot({
     yr = getAgeGroupName(input$ag)
     qstat <- getAgeQuantileStat(yr)
@@ -160,12 +159,12 @@ shinyServer(function(input, output) {
     return (g)
   })
   
-  # [unused] display the timerange selected on Navigation Panel (Age Group View)
+  # [unused] display the timerange selected on Navigation Panel (--unused--)
   output$timerange <- renderText({
     paste("Input Year from ", input$timeframe[1], " to", input$timeframe[2])
   })
   
-  # [unused] display the Prefecture selected on Navigation Panel (Age Group View) 
+  # [unused] display the Prefecture selected on Navigation Panel (--unused--) 
   output$prefecture_selected <- renderText({
     paste("Prefecture Selected : ", preflist$Prefecture[preflist$PID==input$pref])
   })
@@ -185,7 +184,7 @@ shinyServer(function(input, output) {
   })
   
   # [unused] Plot Population Distribution for each age group for selected Census Year
-  #          on Navigation Panel (Age Group)
+  #          on Navigation Panel (--unused--)
   output$showAgeGroupBox <- renderPlot({
     yr = input$agyear
     qstat <- getQuantileStat(yr)

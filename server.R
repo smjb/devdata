@@ -27,6 +27,7 @@ source("reloadData.R")
 # 3. Age Group Statistics on Census Year (Age Group View)
 # 4. Age Group Evolution in Time (Age Group Evolution)
 # 5. Raw Data View (Table View)
+# 6. About Page (About)
 ## --
 
 shinyServer(function(input, output) {

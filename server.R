@@ -6,6 +6,8 @@
 #   For    : Coursera Data Scientist Specialization
 #   For    : Module 9 - Developing Data Products
 #   Date   : Sept 2015
+# Remark   : rCharts not used as it has unpredictable errors that is time consuming to 
+#          : be debugged. The effort is too much for simple application like this.
 ###
 
 library(shiny)
@@ -24,6 +26,7 @@ source("reloadData.R")
 # 2. Age Tracking by Prefecture (Age Tracking)
 # 3. Age Group Statistics on Census Year (Age Group View)
 # 4. Age Group Evolution in Time (Age Group Evolution)
+# 5. Raw Data View (Table View)
 ## --
 
 shinyServer(function(input, output) {
@@ -125,6 +128,9 @@ shinyServer(function(input, output) {
     g<-g+theme(axis.text.x=element_text(angle=90))
     return (g)
   })
+  
+  # [      ] Show data table interactivelyon Navigation Panel (Table View)
+  output$dispStatTable <- renderDataTable(jpstat)
   
   # [unused] Plot Population Distribution over time for selected Age Group
   #          on Navigation Panel (Age Group Evolution in Time)

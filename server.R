@@ -11,7 +11,7 @@
 ###
 
 library(shiny)
-library(rCharts)
+#library(rCharts)
 library(ggplot2)
 
 # load primary file that process the datafile

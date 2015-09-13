@@ -12,7 +12,7 @@
 
 # The user-interface definition of the Shiny web app.
 library(shiny)
-library(rCharts)
+#library(rCharts)
 library(dplyr)
 
 source("reloadData.R")
@@ -33,9 +33,9 @@ source("reloadData.R")
 
 shinyUI(
   fluidPage(
-    titlePanel("Population of Japan - Age Analysis"),
+    titlePanel("Visualization of Japan Population Estimates"),
     navbarPage(
-      "Japan Population Census",
+      "Japan",
       tabPanel(
         "Population View", 
         sidebarLayout(
@@ -135,7 +135,7 @@ shinyUI(
           ), #sideBarPanel.control
           mainPanel(
             p("The graph below shows how the population proportion of the selected age group changes over time."),
-            p("This will show in amuch clearer way on which age group is increasing and which are decreasing over time."),
+            p("This will show in a much clearer way on which age group is increasing and which are decreasing over time."),
             p("You will see that the birth rate is decreasing while the longevity is increasing."),
             plotOutput("showAgeGroupEvolutionBoxPct")
           )#mainpanel
@@ -144,7 +144,7 @@ shinyUI(
       tabPanel( 
         "Table View", 
         mainPanel(
-          p("You can use the fieldsat the bottom of this table to filter data."),
+          p("You can use the fields at the bottom of this table to filter data."),
           fluidRow(
             column(10,
                    dataTableOutput('dispStatTable')
@@ -159,8 +159,11 @@ shinyUI(
           p("Census data from 1970 to 2010 is downloaded from "),
           a("http://www.stat.go.jp/english/data/jinsui/2.htm"),
           h2("Preprocessing"),
-          p("The data from multiple Excel spreadsheets are extracted and processed using the  R-script reshape_jap.R and reshape_jap2.R."),
-          p("The shinyApp only use preprocessed file to speed up the operations.")
+          p("The data from multiple Excel spreadsheets are extracted and processed using the R-script reshape_jap.R and reshape_jap2.R."),
+          p("The shinyApp only use preprocessed file to speed up the operations."),
+          h2("Slides"),
+          p("The pitching slides can be found"),
+          a("http://smjb.github.io/devdata_pitch")
         ) #main
       )#Tabpanel.tab5
     ) #navPanel

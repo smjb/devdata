@@ -11,7 +11,7 @@
 ###
 
 library(dplyr)
-library(rCharts)
+#library(rCharts)
 library(reshape2)
 
 # initialize global variables

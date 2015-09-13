@@ -75,6 +75,15 @@ PrefAgePop <- function(minyear = 1970, maxyear=2010,  pref = 0) {
   
 }
 
+jpGrowth <- function(){
+  jp <- jpstat %>% filter(AgeGroup=="Total") %>% select(Year, Prefecture, Population)
+  d <- tbl_df(dcast(jp, Prefecture ~ Year, value.var="Population")) %>% select(Prefecture, `1970`,`2010`) %>% 
+    mutate(decreasing = `2010`<`1970`, cagr = round(log(`2010`/`1970`)/log(2010-1970)*100,3)) %>%
+    arrange(cagr)
+
+  return (d)  
+}
+
 # unused
 calcGrowth <- function (PrefTable) {
   x <- dcast(PrefTable, AgeGroup ~ Year)  
